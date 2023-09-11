@@ -63,7 +63,6 @@ const useFetch = (endpoint: string) => {
   const [isError, setIsError] = useState<boolean>();
 
   const fetchData = async () => {
-    console.log("Running fetch");
     setIsLoading(true);
     const configurationObject = {
       method: "get",
@@ -71,7 +70,6 @@ const useFetch = (endpoint: string) => {
     };
     try {
       const response = await axios(configurationObject);
-      console.log("Response", response);
       setIsError(false);
       setData(response.data);
       setIsLoading(false);

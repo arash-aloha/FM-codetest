@@ -1,7 +1,6 @@
 import { Text, View } from "react-native";
 import styles from "./groupWorkoutCard.style";
 import { getTime } from "../../utils";
-import { ClubDetails } from "../../utils/hook";
 
 const GroupWorkoutCard = ({ item }) => {
   const { instructors, slots, groupActivityProduct, duration } = item;

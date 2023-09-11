@@ -1,7 +1,7 @@
 import { View, FlatList, SafeAreaView } from "react-native";
 import Header from "../../components/header";
 import GlobalStyles from "../../styles/styles";
-import { allClubsEndpoint, baseUrl, images } from "../../constans/indext";
+import { allClubsEndpoint, images } from "../../constans/indext";
 import GymUnitCard from "../../components/gymUnitCard";
 
 import useFetch from "../../utils/hook";
@@ -15,15 +15,11 @@ export interface BusinessUnits {
 }
 
 function HomeScreen({ navigation }) {
-  // const { data, isLoading, isError } = useFetch(allClubsEndpoint);
-
   const { data, isError, isLoading, fetchData } = useFetch(allClubsEndpoint);
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log("DATA: ", data);
 
   return (
     <SafeAreaView>
@@ -42,7 +38,7 @@ function HomeScreen({ navigation }) {
         {isLoading ? (
           <LoadingScreen />
         ) : isError ? (
-          <ErrorButton endpoint={baseUrl} />
+          <ErrorButton endpoint={allClubsEndpoint} />
         ) : (
           <View style={GlobalStyles.cards_wrapper}>
             <FlatList
