@@ -1,14 +1,69 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { baseUrl } from "../constans/url";
 
+export type ClubDetails = {
+  bookableEarliest: string;
+  bookableLatest: string;
+  businessUnit: BusinessUnit;
+  cancelled: boolean;
+  duration: Duration;
+  externalMessage: boolean;
+  groupActivityProduct: GroupActivityProduct;
+  id: string;
+  instructors: Instructors[];
+  internalMessage: boolean;
+  locations: Locations;
+  name: string;
+  slots: Slots;
+};
+
+interface BusinessUnit {
+  id: number;
+  name: string;
+  location: string;
+  companyNameForInvoice: string;
+}
+
+interface Duration {
+  start: string;
+  end: string;
+}
+
+interface GroupActivityProduct {
+  id: string;
+  name: string;
+}
+
+interface Instructors {
+  id: string;
+  isSubstitute: boolean;
+  name: string;
+}
+
+interface Locations {
+  id: number;
+  name: string;
+}
+
+interface Slots {
+  hasWaitingList: boolean;
+  inWaitingList: number;
+  leftToBook: number;
+  leftToBookIncDropin: number;
+  reservedForDropin: number;
+  total: number;
+  totalBookable: number;
+}
+
 const useFetch = (endpoint: string) => {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(null);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState<ClubDetails[]>();
+  const [isLoading, setIsLoading] = useState<boolean>();
+  const [isError, setIsError] = useState<boolean>();
 
   const fetchData = async () => {
+    console.log("Running fetch");
     setIsLoading(true);
     const configurationObject = {
       method: "get",
@@ -16,29 +71,23 @@ const useFetch = (endpoint: string) => {
     };
     try {
       const response = await axios(configurationObject);
-      setError(false);
+      console.log("Response", response);
+      setIsError(false);
       setData(response.data);
       setIsLoading(false);
     } catch (error) {
       console.log("Something went wrong when fetching the data.", error);
       setIsLoading(false);
-      setError(true);
+      setIsError(true);
       throw new Error("Something went wrong when getting data.");
     }
   };
 
-  useEffect(() => {
-    console.log(`fetching with endpoint: ${baseUrl}/${endpoint}`);
-    fetchData();
-  }, []);
-
   const reFetchData = () => {
-    console.log("refetching");
-    setIsLoading(true);
     fetchData();
   };
 
-  return { data, isLoading, error, reFetchData };
+  return { data, isLoading, isError, reFetchData, fetchData };
 };
 
 export default useFetch;

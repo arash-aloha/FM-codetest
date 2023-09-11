@@ -7,16 +7,18 @@ const createEndpointUrl = (
 };
 
 const getCurrentTimestamp = () => {
-  const currentDate = new Date();
-  const isoTimestamp = currentDate.toISOString();
-  return encodeURIComponent(isoTimestamp);
+  return new Date();
 };
 
-const getTimestamp7DaysAhead = () => {
-  const futureDate = new Date();
-  futureDate.setDate(futureDate.getDate() + 7);
-  const isoTimestamp = futureDate.toISOString();
-  return encodeURIComponent(isoTimestamp);
+const getTimestamp6DaysAhead = () => {
+  const currentDate = getCurrentTimestamp();
+  const futureDate = currentDate.setDate(currentDate.getDate() + 6);
+  return new Date(futureDate);
+};
+
+const getEncodedTimeStamp = (timestampString) => {
+  const encodedTimestamp = timestampString.toISOString();
+  return encodedTimestamp;
 };
 
 const getTime = function convertTimeToString(timeString: string) {
@@ -28,23 +30,24 @@ const getTime = function convertTimeToString(timeString: string) {
   return `${formattedHours}:${formattedMinutes}`;
 };
 
-const getWeekDay = () => {
-  const weekDays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursdsay",
-    "Friday",
-    "Saturday",
-  ];
+interface Grouped {
+  [key: number]: string;
+}
+const groupSlotsByDay = (slots) => {
+  const groupedSlots = slots.reduce((acc: Grouped, currentValue) => {
+    const currentDay = new Date(currentValue).getDay();
+    acc[currentDay] = currentValue;
+    return acc;
+  }, {});
 
-  const weekDaysForGivenTimeSpan = [];
+  console.log("grouped", groupedSlots);
 };
 
 export {
   createEndpointUrl,
   getCurrentTimestamp,
-  getTimestamp7DaysAhead,
+  getTimestamp6DaysAhead,
   getTime,
+  getEncodedTimeStamp,
+  groupSlotsByDay,
 };

@@ -1,24 +1,24 @@
 import { Text, View } from "react-native";
 import styles from "./groupWorkoutCard.style";
 import { getTime } from "../../utils";
+import { ClubDetails } from "../../utils/hook";
 
 const GroupWorkoutCard = ({ item }) => {
-  console.log("RESPONSE: ", item);
+  const { instructors, slots, groupActivityProduct, duration } = item;
+
   return (
     <View style={styles.card_container}>
       <View style={styles.text_container}>
         <Text style={styles.slots_text}>
-          {item.slots.leftToBookIncDropin} places remaining
+          {slots.leftToBookIncDropin} places remaining
         </Text>
       </View>
       <View style={styles.text_container}>
-        <Text style={styles.groupActivity}>
-          {item.groupActivityProduct.name}
-        </Text>
+        <Text style={styles.groupActivity}>{groupActivityProduct.name}</Text>
       </View>
       <View style={styles.text_container}>
         <Text>
-          {getTime(item.duration.start)} {item.instructors.name}
+          {getTime(duration.start)} <Text>{instructors[0].name}</Text>
         </Text>
       </View>
     </View>

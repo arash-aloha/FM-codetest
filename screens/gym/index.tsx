@@ -14,10 +14,12 @@ import styles from "./gym.style";
 import {
   createEndpointUrl,
   getCurrentTimestamp,
-  getTimestamp7DaysAhead,
+  getEncodedTimeStamp,
+  getTimestamp6DaysAhead,
 } from "../../utils";
 import LoadingScreen from "../../components/loadingText";
 import ErrorButton from "../../components/errorButton";
+import { useEffect } from "react";
 
 type GymScreenProps = {
   navigation: NativeStackScreenProps<RootStackParamList>;
@@ -28,11 +30,24 @@ function GymScreen({ navigation, route }: GymScreenProps) {
   const { address, name, id } = route.params;
 
   const startDate = getCurrentTimestamp();
-  const endDate = getTimestamp7DaysAhead();
-  const url = createEndpointUrl(id, startDate, endDate);
+  const endDate = getTimestamp6DaysAhead();
 
-  const { data, error, isLoading } = useFetch(url);
+  const startDateAsIsoString = getEncodedTimeStamp(startDate);
+  const endDateAsIsoString = getEncodedTimeStamp(endDate);
 
+  const endpoint = createEndpointUrl(
+    id,
+    startDateAsIsoString,
+    endDateAsIsoString
+  );
+
+  const { data, isError, isLoading, fetchData } = useFetch(endpoint);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log("DATA FROM GYM SCREEN", data);
   return (
     <SafeAreaView>
       <View style={GlobalStyles.container}>
@@ -45,8 +60,8 @@ function GymScreen({ navigation, route }: GymScreenProps) {
 
         {isLoading ? (
           <LoadingScreen />
-        ) : error ? (
-          <ErrorButton endpoint={url} />
+        ) : isError ? (
+          <ErrorButton endpoint={endpoint} />
         ) : (
           <View style={GlobalStyles.cards_wrapper}>
             <Text style={styles.section_title}>Upcoming sessions</Text>

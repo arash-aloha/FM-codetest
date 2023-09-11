@@ -7,6 +7,7 @@ import GymUnitCard from "../../components/gymUnitCard";
 import useFetch from "../../utils/hook";
 import LoadingScreen from "../../components/loadingText";
 import ErrorButton from "../../components/errorButton";
+import { useEffect } from "react";
 
 export interface BusinessUnits {
   id: string;
@@ -14,7 +15,15 @@ export interface BusinessUnits {
 }
 
 function HomeScreen({ navigation }) {
-  const { data, isLoading, error } = useFetch(allClubsEndpoint);
+  // const { data, isLoading, isError } = useFetch(allClubsEndpoint);
+
+  const { data, isError, isLoading, fetchData } = useFetch(allClubsEndpoint);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log("DATA: ", data);
 
   return (
     <SafeAreaView>
@@ -32,7 +41,7 @@ function HomeScreen({ navigation }) {
 
         {isLoading ? (
           <LoadingScreen />
-        ) : error ? (
+        ) : isError ? (
           <ErrorButton endpoint={baseUrl} />
         ) : (
           <View style={GlobalStyles.cards_wrapper}>
@@ -42,7 +51,7 @@ function HomeScreen({ navigation }) {
               renderItem={({ item }) => (
                 <GymUnitCard data={item} navigation={navigation} />
               )}
-              keyExtractor={(item) => item?.id}
+              keyExtractor={(item) => item.id}
               style={GlobalStyles.card_container}
             />
           </View>
